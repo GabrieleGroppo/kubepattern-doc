@@ -91,9 +91,9 @@ const config = {
         items: [
           {
             type: 'docSidebar',
-            sidebarId: 'tutorialSidebar',
+            sidebarId: 'kubepatternSidebar',
             position: 'left',
-            label: 'Tutorial',
+            label: 'Overview',
           },
           //{to: '/blog', label: 'Blog', position: 'left'},
           {
