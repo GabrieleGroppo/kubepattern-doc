@@ -26,7 +26,7 @@ const FeatureList = [
     Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
     description: (
       <>
-        detect anti-patterns and missing best practices in your workloads. KubePattern ensures architectural consistency and helps maintain healthy, production-ready Kubernetes clusters.
+        Detect anti-patterns and missing best practices in your workloads. KubePattern ensures architectural consistency and helps maintain healthy, production-ready Kubernetes clusters.
       </>
     ),
   },
