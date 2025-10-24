@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Pattern-as-Code illustration</title>
+  <desc id="desc">Minimal flat illustration: a parchment scroll with JSON on the left connected to stylized Kubernetes and resource icons on the right. Transparent background.</desc>
+
+  <!-- Palette (inlined) -->
+  <!-- primary: #326ce5 -->
+  <!-- primary-dark: #2563dc -->
+  <!-- primary-darker: #215dd0 -->
+  <!-- primary-lightest: #7aa0f0 -->
+
+  <!-- Transparent background (no rect fill) -->
+
+  <!-- Definitions for reusable shapes -->
+  <defs>
+    <!-- hexagon shape for k8s badges -->
+    <g id="hexagon">
+      <polygon points="0,-56 48,-28 48,28 0,56 -48,28 -48,-28" />
+    </g>
+
+    <!-- subtle shadow filter -->
+    <filter id="softShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="10" stdDeviation="18" flood-color="#1b4dab" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+
+  <!-- Left: parchment scroll -->
+  <g transform="translate(180,160)">
+    <!-- scroll body -->
+    <path d="M140 40
+             H40
+             C30 40 22 48 22 58
+             V620
+             C22 630 30 638 40 638
+             H380
+             C390 638 398 630 398 620
+             V170
+             C398 160 390 152 380 152
+             H300"
+          fill="#EAF3FF" stroke="#2563dc" stroke-width="14" stroke-linejoin="round" />
+    <!-- left rolled end -->
+    <path d="M40 40 C16 40 0 64 0 86 C0 108 16 132 40 132"
+          fill="#EAF3FF" stroke="#2563dc" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" transform="translate(0,0)" />
+    <!-- bottom rolled end -->
+    <path d="M300 620 C300 650 260 670 220 670 C180 670 140 650 140 620"
+          fill="#EAF3FF" stroke="#2563dc" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" />
+
+    <!-- JSON-like lines -->
+    <g transform="translate(80,140)" fill="none" stroke="#215dd0" stroke-linecap="round" stroke-linejoin="round" stroke-width="12">
+      <!-- curly brace top -->
+      <path d="M0 0 C-8 20 8 40 0 60" />
+      <!-- few lines representing JSON -->
+      <path d="M40 20 H220" stroke-linecap="round" stroke-width="14"/>
+      <path d="M40 60 H280" stroke-linecap="round" stroke-width="12"/>
+      <path d="M40 100 H180" stroke-linecap="round" stroke-width="12"/>
+      <path d="M40 140 H240" stroke-linecap="round" stroke-width="12"/>
+      <!-- curly brace bottom -->
+      <path d="M0 200 C-8 220 8 240 0 260" transform="translate(0,20)"/>
+    </g>
+  </g>
+
+  <!-- Right side icons and connections -->
+  <g transform="translate(640,180)">
+    <!-- top-right: Kubernetes hexagon -->
+    <g transform="translate(120,0)" filter="url(#softShadow)">
+      <g transform="translate(0,0) scale(1.6)">
+        <g transform="translate(0,0)">
+          <use href="#hexagon" fill="#326ce5" stroke="#215dd0" stroke-width="8" transform="translate(0,0)"/>
+          <!-- simplified k8s wheel -->
+          <g transform="translate(0,0)" fill="none" stroke="#ffffff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="0" cy="0" r="18" stroke-width="12" />
+            <path d="M0 -36 L0 -18" />
+            <path d="M24 -12 L6 -6" />
+            <path d="M24 12 L6 6" />
+            <path d="M0 36 L0 18" />
+            <path d="M-24 12 L-6 6" />
+            <path d="M-24 -12 L-6 -6" />
+          </g>
+        </g>
+      </g>
+    </g>
+
+    <!-- central database cylinder -->
+    <g transform="translate(120,180)">
+      <ellipse cx="0" cy="-36" rx="72" ry="28" fill="#7aa0f0" stroke="#2563dc" stroke-width="10"/>
+      <rect x="-72" y="-36" width="144" height="140" rx="8" fill="#a7c5f6" stroke="#2563dc" stroke-width="10"/>
+      <ellipse cx="0" cy="104" rx="72" ry="28" fill="#7aa0f0" stroke="#2563dc" stroke-width="10"/>
+    </g>
+
+    <!-- bottom-left small badge (e.g., controller / pattern) -->
+    <g transform="translate(0,420)" filter="url(#softShadow)">
+      <g transform="translate(0,0) scale(1.15)">
+        <use href="#hexagon" fill="#5b8dee" stroke="#215dd0" stroke-width="8" />
+        <!-- small network glyph -->
+        <g transform="translate(0,0)" fill="#ffffff">
+          <circle cx="-10" cy="0" r="8"/>
+          <circle cx="18" cy="-14" r="8"/>
+          <circle cx="18" cy="14" r="8"/>
+          <path d="M-2 2 L12 -10" stroke="#ffffff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M-2 -2 L12 10" stroke="#ffffff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+      </g>
+    </g>
+
+    <!-- connections: thin lines from parchment to resources -->
+    <g stroke="#215dd0" stroke-width="10" stroke-linecap="round" fill="none">
+      <!-- from parchment right edge to db -->
+      <path d="M420 300 L360 300" />
+      <path d="M360 300 L240 260" />
+
+      <!-- from parchment lower-right to bottom-left badge -->
+      <path d="M420 560 L320 560 L160 476" />
+
+      <!-- from db up to kubernetes hex -->
+      <path d="M240 120 L240 40 L200 0" />
+    </g>
+
+    <!-- small endpoint circles to emphasize nodes -->
+    <g fill="#326ce5" stroke="#215dd0" stroke-width="6">
+      <circle cx="420" cy="300" r="10" />
+      <circle cx="240" cy="120" r="10" />
+      <circle cx="160" cy="476" r="10" />
+    </g>
+  </g>
+
+  <!-- overall subtle border / frame for square composition (optional, very light) -->
+  <rect x="12" y="12" width="1000" height="1000" rx="28" fill="none" stroke="#000000" stroke-opacity="0.02" stroke-width="24"/>
+
+</svg>
