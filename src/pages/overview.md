@@ -68,9 +68,11 @@ spec:
       uid: 1b2c3d4e-5f6g-7h8i-9j0k-1l2m3n4o5p6q
 ```
 
+```md
 ## Next Steps
 
 - [Getting Started](./getting-started): Start using KubePattern
 - [Installation](./installation): Installation guide
 - [Pattern Catalog](./patterns): Learn how to build patterns and explore existing ones
 - [Configuration](./configuration): Configure the tool for your needs
+```
