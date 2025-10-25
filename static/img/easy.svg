@@ -1,64 +1,84 @@
-<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1024" height="1024" viewBox="0 0 1024 1024"
+  xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Easy to Use illustration</title>
+  <desc id="desc">Stylized, minimal illustration of a happy user at a laptop with a Kubernetes-like cluster and a green checkmark, symbolizing simplicity, confidence, and ease of use.</desc>
+
+  <!-- Color Palette -->
+  <!-- primary: #326ce5 -->
+  <!-- darker: #215dd0 -->
+  <!-- lighter: #7aa0f0 -->
+  <!-- success: #3EBE64 -->
+
   <defs>
-    
-<filter id="softShadow" x="-50%" y="-50%" width="200%" height="200%">
-      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#215dd0" flood-opacity="0.2"/>
+    <filter id="softShadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#215dd0" flood-opacity="0.12"/>
     </filter>
-    
-    
-<marker id="arrowSolid" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
-      <polygon points="0 0, 8 4, 0 8" fill="#326ce5"/>
-    </marker>
-    
-    
-<marker id="arrowDashed" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
-      <polygon points="0 0, 8 4, 0 8" fill="#7aa0f0"/>
-    </marker>
+
+    <!-- hex node for cluster -->
+    <g id="hex">
+      <polygon points="0,-32 28,-16 28,16 0,32 -28,16 -28,-16" />
+    </g>
   </defs>
-  
-  
-<g transform="translate(200, 200)" filter="url(#softShadow)">
-    <path d="M 0 -80 L 69 -40 L 69 40 L 0 80 L -69 40 L -69 -40 Z" 
-          fill="#EAF3FF" 
-          stroke="#326ce5" 
-          stroke-width="8"/>
-    
-    
-<circle cx="-10" cy="-5" r="5" fill="#326ce5"/>
-    <circle cx="10" cy="-5" r="5" fill="#326ce5"/>
-    <circle cx="-10" cy="-5" r="2" fill="white"/>
-    <circle cx="10" cy="-5" r="2" fill="white"/>
-    
-    
-<path d="M -6 15 L 0 21 L 12 6" fill="none" stroke="#326ce5" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- background: transparent -->
+
+  <!-- user figure -->
+  <g transform="translate(280,600)" stroke="#215dd0" stroke-width="14" fill="none" stroke-linecap="round" stroke-linejoin="round" filter="url(#softShadow)">
+    <!-- head -->
+    <circle cx="0" cy="-140" r="40" fill="#7aa0f0" stroke="#215dd0" />
+    <!-- smile -->
+    <path d="M-16 -130 Q0 -118 16 -130" stroke="#215dd0" stroke-width="6" stroke-linecap="round"/>
+    <!-- body -->
+    <path d="M0 -100 V-20" />
+    <!-- arms (toward laptop) -->
+    <path d="M0 -70 Q-40 -50 -60 -20" />
+    <path d="M0 -70 Q40 -50 60 -20" />
+    <!-- legs -->
+    <path d="M0 -20 L-30 60" />
+    <path d="M0 -20 L30 60" />
   </g>
-  
-  
-<g transform="translate(200, 60)">
-    <rect x="-25" y="-15" width="50" height="30" rx="6" fill="#326ce5" stroke="#215dd0" stroke-width="3"/>
-    <circle cx="0" cy="0" r="4" fill="white"/>
-    <line x1="-10" y1="0" x2="-5" y2="0" stroke="white" stroke-width="2"/>
-    <line x1="5" y1="0" x2="10" y2="0" stroke="white" stroke-width="2"/>
+
+  <!-- laptop -->
+  <g transform="translate(280,580)" filter="url(#softShadow)">
+    <rect x="-90" y="-38" width="180" height="16" rx="4" fill="#326ce5" />
+    <rect x="-90" y="-22" width="180" height="80" rx="8" fill="#EAF3FF" stroke="#2563dc" stroke-width="8"/>
   </g>
-  
-  
-<line x1="200" y1="90" x2="200" y2="110" 
-        stroke="#326ce5" 
-        stroke-width="4" 
-        marker-end="url(#arrowSolid)"/>
-  
-  
-<g transform="translate(320, 200)">
-    <circle cx="0" cy="0" r="20" fill="#7aa0f0" stroke="#215dd0" stroke-width="3"/>
-    <circle cx="0" cy="0" r="14" fill="white"/>
-    <line x1="0" y1="0" x2="0" y2="-8" stroke="#326ce5" stroke-width="2" stroke-linecap="round"/>
-    <line x1="0" y1="0" x2="6" y2="3" stroke="#326ce5" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- connection curve -->
+  <path d="M380 520 C520 520 640 460 720 480"
+        stroke="#326ce5" stroke-width="14" fill="none" stroke-linecap="round" opacity="0.9"/>
+
+  <!-- cluster group -->
+  <g transform="translate(720,440)" filter="url(#softShadow)">
+    <!-- cluster ring -->
+    <circle cx="0" cy="0" r="120" fill="none" stroke="#2563dc" stroke-width="10" stroke-dasharray="12 16" />
+    <!-- nodes -->
+    <g fill="#7aa0f0" stroke="#215dd0" stroke-width="8">
+      <use href="#hex" transform="translate(0,-100)" />
+      <use href="#hex" transform="translate(86,-50)" />
+      <use href="#hex" transform="translate(86,50)" />
+      <use href="#hex" transform="translate(0,100)" />
+      <use href="#hex" transform="translate(-86,50)" />
+      <use href="#hex" transform="translate(-86,-50)" />
+    </g>
+    <!-- subtle connections -->
+    <g stroke="#215dd0" stroke-width="6" stroke-linecap="round" fill="none" opacity="0.8">
+      <line x1="0" y1="-100" x2="86" y2="-50"/>
+      <line x1="0" y1="-100" x2="-86" y2="-50"/>
+      <line x1="-86" y1="50" x2="0" y2="100"/>
+      <line x1="86" y1="50" x2="0" y2="100"/>
+    </g>
   </g>
-  
-  
-<line x1="295" y1="200" x2="275" y2="200" 
-        stroke="#7aa0f0" 
-        stroke-width="4" 
-        stroke-dasharray="8 4"
-        marker-end="url(#arrowDashed)"/>
+
+  <!-- success checkmark -->
+  <g transform="translate(720,700)" filter="url(#softShadow)">
+    <circle cx="0" cy="0" r="60" fill="#EAF3FF" stroke="#3EBE64" stroke-width="12"/>
+    <path d="M-22 0 L0 24 L36 -24"
+          fill="none" stroke="#3EBE64" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- soft frame -->
+  <rect x="12" y="12" width="1000" height="1000" rx="28"
+        fill="none" stroke="#000000" stroke-opacity="0.02" stroke-width="24"/>
 </svg>
