@@ -11,7 +11,7 @@ import {themes as prismThemes} from 'prism-react-renderer';
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'KubePattern',
-  tagline: 'A tool to hint Kubernetes Architectural Patterns.',
+  tagline: 'A tool to hint Kubernetes Architectural Patterns & Best Practices.',
   favicon: 'img/kubepattern.svg',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
@@ -97,7 +97,7 @@ const config = {
           },
           {to: '/blog', label: 'Blog', position: 'left'},
           {
-            href: 'https://github.com/GabrieleGroppo/',
+            href: 'https://github.com/GabrieleGroppo/kubepattern',
             label: 'GitHub',
             position: 'right',
           },

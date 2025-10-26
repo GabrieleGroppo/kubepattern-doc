@@ -21,3 +21,16 @@
   align-items: center;
   justify-content: center;
 }
+
+.heroSvg {
+  /* Imposta la dimensione quadrata che desideri */
+  margin-top: 20px;
+  width: 150px;
+  height: 150px;
+
+  /* Aggiunge un po' di spazio tra il bottone e l'icona */
+  margin-left: 1rem;
+  
+  /* Opzionale: allinea verticalmente l'icona con il bottone */
+  vertical-align: middle; 
+}
