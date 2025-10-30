@@ -74,6 +74,3 @@ spec:
 ## Next Steps
 
 - [Getting Started](./getting-started): Start using KubePattern
-- [Installation](./installation): Installation guide
-- [Pattern Catalog](./patterns): Learn how to build patterns and explore existing ones
-- [Configuration](./configuration): Configure the tool for your needs
