@@ -1,4 +1,7 @@
-# Relationship
+---
+sidebar_position: 4
+---
+# Relationships
 
 In KubePattern, a **Relationship** defines the fundamental, directed link between different Kubernetes resources. These connections are the core mechanism KubePattern uses to understand your application's complete architecture from its static manifests. Unlike traditional linters that inspect resources in isolation, KubePattern identifies these links by analyzing specific fields in the YAML definitions to map the dependencies and boundaries between components.
 
