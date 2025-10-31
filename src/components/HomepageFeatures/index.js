@@ -5,7 +5,6 @@ import styles from './styles.module.css';
 const FeatureList = [
   {
     title: 'Easy to use',
-    Svg: require('@site/static/img/easy.svg').default,
     description: (
       <>
         Deploy KubePattern on your cluster with read permissions, then trigger analysis via REST endpoint or automate it with CronJobs—simple and flexible.
@@ -14,8 +13,6 @@ const FeatureList = [
   },
   {
     title: 'Pattern As Code',
-    Svg: require('@site/static/img/pac.svg').default,
-
     description: (
       <>
         Define architectural patterns in declarative JSON files, read and enforced by <b>KubePattern</b> across your Kubernetes workloads.
@@ -24,7 +21,6 @@ const FeatureList = [
   },
   {
     title: 'Improve cluster quality',
-    Svg: require('@site/static/img/quality.svg').default,
     description: (
       <>
         Detect anti-patterns and missing best practices in your workloads. KubePattern ensures architectural consistency and helps maintain healthy, production-ready Kubernetes clusters.
