@@ -10,7 +10,7 @@ The **Kubernetes Pattern Detection API** allows you to write **rules** to identi
 
 ### Pattern Schema Version
 
-- **Version**: `kubepattern.sigemi.it/v2`
+- **Version**: `kubepattern.it/v1`
 - **Format**: YAML
 
 ## Pattern Definition Structure
@@ -19,7 +19,7 @@ The **Kubernetes Pattern Detection API** allows you to write **rules** to identi
 
 |Property|Type|Required|Description|
 |---|---|---|---|
-|`version`|string|Yes|Version of the pattern schema (`kubepattern.sigemi.it/v2`)|
+|`version`|string|Yes|Version of the pattern schema (`kubepattern.it/v1`)|
 |`kind`|enum|Yes|Must be `Pattern`|
 |`metadata`|object|Yes|Pattern metadata information|
 |`spec`|object|Yes|Pattern specification|
@@ -28,13 +28,13 @@ The **Kubernetes Pattern Detection API** allows you to write **rules** to identi
 
 | Property      | Type   | Required | Description                                                                            |
 | ------------- | ------ | -------- | -------------------------------------------------------------------------------------- |
-| `name`        | string | Yes      | Name of the pattern                                                                    |
-| `patternType` | enum   | Yes      | Type: `Structural`, `Behavioral`, `Functional`, ...                                    |
-| `severity`    | enum   | Yes      | Severity level: `Critical`, `Warning`, `Info`, `Debug`                                 |
+| `name`        | string | Yes      | Name of the pattern (es: my-pattern)                                                   |
+| `displayName`        | string | Yes      | Name of the pattern (es: My Pattern)                                            |
+| `patternType` | enum   | Yes      | Type: `STRUCTURAL`, `BEHAVIORAL`, `FUNCTIONAL`, ...                                    |
+| `severity`    | enum   | Yes      | Severity level: `CRITICAL`, `WARNING`, `INFO`                                          |
 | `category`    | enum   | Yes      | Category: `BestPractice`, `Security`, `Reliability`, `Performance`, `CostOptimization` |
 | `docUrl`      | string | No       | URL to pattern documentation                                                           |
 | `gitUrl`      | string | No       | URL to Git repository containing pattern rules                                         |
-| `patternURI`  | string | No       | Reference to documentation about the pattern                                           |
 
 ### `spec`
 
@@ -42,18 +42,11 @@ The **Kubernetes Pattern Detection API** allows you to write **rules** to identi
 | --------------- | ------ | -------- | --------------------------------------------------- |
 | `description`   | string | Yes      | Brief description of the pattern                    |
 | `message`       | string | Yes      | Message displayed when pattern is matched           |
-| `globalFilters` | object | No       | Conditions that must be met for all resources       |
+| `topology`      | enum   | Yes      | Topology: `LEADER_FOLLOWER`, `SINGLE`               |
+| `leader`        | string | Yes      | Name of Pattern Leader (es: main-container)         |
 | `resources`     | array  | Yes      | Array of resource definitions (minimum 1 required)  |
 | `relationships` | array  | No       | Array of relationship definitions between resources |
-| `shared`        | array  | No       | Generic shared conditions between resources         |
 
-### `spec.globalFilters`
-
-|Property|Type|Required|Description|
-|---|---|---|---|
-|`matchAll`|array|No|All conditions must be met|
-|`matchAny`|array|No|At least one condition must be met|
-|`matchNone`|array|No|None of these conditions must be met|
 
 ### `spec.resources`
 
@@ -62,7 +55,7 @@ Each resource in the `resources` array must contain:
 |Property|Type|Required|Description|
 |---|---|---|---|
 |`resource`|string|Yes|Kubernetes resource kind (e.g., "Pod", "Service", "Deployment")|
-|`id`|string|Yes|Unique identifier for the resource within the pattern|
+|`id`|string|Yes|Unique identifier for the resource within the pattern (es: main-container) |
 |`filters`|object|No|Filtering conditions for this resource|
 
 ### `spec.resources.filters`
@@ -80,8 +73,7 @@ Each condition within filter arrays contains:
 |Property|Type|Required|Description|
 |---|---|---|---|
 |`key`|string|Yes|JSONPath or key to match against|
-|`operator`|enum|Yes|Comparison operator|
-|`mode`|enum|No|Matching mode (default: "Any")|
+|`operator`|enum|Yes|Comparison operator (es: EQUALS, CONTAINS, EXISTS)|
 |`values`|array|Conditional|Values to match against (not required for `Exists`/`NotExists`)|
 
 ### `spec.relationships`
@@ -102,48 +94,41 @@ Each condition in a relationship contains:
 
 |Property|Type|Required|Description|
 |---|---|---|---|
-|`key`|string|Yes|JSONPath to the field being compared|
-|`operator`|enum|Yes|Comparison operator|
-|`mode`|enum|No|Matching mode (default: "Any")|
+|`id`|string|Yes|Relationship ID|
+|`type`|enum|Yes|Relationship Type (es: MOUNTS, OWNS, ...)|
+|`description`|string|No|Brief description of the relationship|
 |`shared`|boolean|No|Whether the value must be shared between resources|
-|`values`|array|Conditional|Expected values (not required for shared comparisons)|
+|`weight`|integer|No|Wheight of a Relationship to calculate analysis's confidence|
+|`resourceIds`|array|Yes|Resource Ids that have to match/not match the relationship|
 
 ## Supported Relationship Types
 
-|Type|Description|Use Case|
-|---|---|---|
-|`SharedNamespace`|Resources must be in the same namespace|Co-location requirement|
-|`SameNode`|Resources should be scheduled on the same node|Low-latency communication|
-|`SameAttributes`|Resources should share specific attributes|Consistency requirements|
-|`ParentChild`|Resources must belong to the same parent resource|Ownership relationship|
-|`SameParentDifferentContainers`|Different containers in the same pod template|Multi-container patterns|
-|`SharedLabels`|Resources should share common labels|Application grouping|
-|`SharedVolume`|Resources should share volumes|Data exchange|
-|`NetworkProximity`|Resources should be network-accessible|Communication requirement|
+| Tipo | Descrizione / Esempio |
+| :--- | :--- |
+| `OWNS` | Deployment -> ReplicaSet |
+| `MANAGES` | ReplicaSet -> Pod |
+| `MOUNTS` | Pod -> Volume |
+| `EXPOSES` | Service -> Pod |
+| `USES_CONFIG` | Riferimento a ConfigMap/Secret |
+| `SAME_NETWORK` | Network policies |
+| `IS_NAMESPACE_OF` | Namespace -> Generic Resource |
+| `USES_SA` | Pod -> ServiceAccount |
+| `HAS_AFFINITY_TO` | Pod -> Pod |
 
 ## Supported Operators
 
-|Operator|Description|Applicable To|
-|---|---|---|
-|`Equals`|Exact match|All types|
-|`NotEquals`|Not equal to|All types|
-|`Contains`|Contains substring|Strings|
-|`NotContains`|Does not contain substring|Strings|
-|`In`|Value is in the list|All types|
-|`NotIn`|Value is not in the list|All types|
-|`Exists`|Key exists|All types|
-|`NotExists`|Key does not exist|All types|
-|`GreaterThan`|Numeric greater than|Numbers|
-|`LessThan`|Numeric less than|Numbers|
+| Operator | Description |
+| :--- | :--- |
+| `EQUALS` | Exact match |
+| `NOT_EQUALS` | Not equal to |
+| `GREATER_THAN` | Greater than |
+| `GREATER_OR_EQUAL` | Greater than or equal to |
+| `LESS_THAN` | Less than |
+| `LESS_OR_EQUAL` | Less than or equal to |
+| `EXISTS` | Key exists |
+| `NOT_EXISTS` | Key does not exist |
+| `IS_EMPTY` | Is empty |
 
-## Supported Modes
-
-|Mode|Description|
-|---|---|
-|`All`|All values must match|
-|`Any`|At least one value must match (default)|
-|`None`|No values must match|
-|`One`|Exactly one value must match|
 
 ## JSONPath Key Syntax
 
@@ -165,150 +150,166 @@ The `key` property supports JSONPath-like syntax for accessing Kubernetes resour
 ### Simple Sidecar Pattern
 
 ```yaml
-version: kubepattern.sigemi.it/v2
-kind: Pattern
-metadata:
-  name: sidecar-pattern
-  patternType: Structural
-  severity: Warning
-  category: BestPractice
-  docUrl: https://docs.sigemi.it/patterns/sidecar
-
-spec:
-  description: |
-    Identifies configurations suitable for Sidecar pattern application
-  
-  leader: "main-app"
-  message: "Sidecar pattern detected for {{resource.kind}} {{resource.metadata.name}} in namespace {{resource.metadata.namespace}}"
-  
-  globalFilters:
-    matchNone:
-    - key: metadata.namespace
-      operator: In
-      values: ["kube-system", "kube-public"]
-  
-  resources:
-  - resource: "Pod"
-    id: "main-app"
-    filters:
-      matchAll:
-      - key: metadata.labels['app']
-        operator: Exists
-      - key: spec.containers
-        operator: GreaterThan
-        values: [1]
-  
-  - resource: "Pod"
-    id: "potential-sidecar"
-    filters:
-      matchAll:
-      - key: spec.containers[*].image
-        operator: Contains
-        mode: Any
-        values: ["prometheus", "fluentd", "envoy"]
-  
-  relationships:
-  - type: SharedNamespace
-    description: "Sidecar must be in same namespace as main app"
-    resourceIds: ["main-app", "potential-sidecar"]
-    required: true
-    conditions:
-    - key: "metadata.namespace"
-      operator: Equals
-      shared: true
-  
-  - type: SharedLabels
-    description: "Should share application labels"
-    resourceIds: ["main-app", "potential-sidecar"]
-    required: false
-    conditions:
-    - key: "metadata.labels['app']"
-      operator: Equals
-      shared: true
-```
-
-### Complex Multi-Resource Pattern
-
-```yaml
-version: kubepattern.sigemi.it/v2
-kind: Pattern
-metadata:
-  name: microservice-communication
-  patternType: Behavioral
-  severity: Info
-  category: Reliability
-
-spec:
-  description: |
-    Identifies microservice communication patterns with proper service mesh integration
-  
-  leader: "frontend-service"
-  message: "Microservice communication pattern identified"
-  
-  resources:
-  - resource: "Service"
-    id: "frontend-service"
-    filters:
-      matchAll:
-      - key: metadata.labels['tier']
-        operator: Equals
-        values: ["frontend"]
-  
-  - resource: "Service"
-    id: "backend-service"
-    filters:
-      matchAll:
-      - key: metadata.labels['tier']
-        operator: Equals
-        values: ["backend"]
-  
-  - resource: "Deployment"
-    id: "frontend-deployment"
-    filters:
-      matchAll:
-      - key: spec.template.metadata.labels['tier']
-        operator: Equals
-        values: ["frontend"]
-  
-  relationships:
-  - type: SharedNamespace
-    resourceIds: ["frontend-service", "backend-service", "frontend-deployment"]
-    required: true
-    conditions:
-    - key: "metadata.namespace"
-      operator: Equals
-      shared: true
-  
-  - type: SharedLabels
-    resourceIds: ["frontend-service", "frontend-deployment"]
-    required: true
-    conditions:
-    - key: "metadata.labels['app']"
-      operator: Equals
-      shared: true
-  
-  shared:
-  - key: "metadata.labels['version']"
-    ids: ["frontend-service", "frontend-deployment"]
-    shared: true
-    operator: Equals
-  
-  - key: "spec.selector.app"
-    ids: ["frontend-service", "frontend-deployment"]
-    shared: true
-    operator: Equals
+{
+    "version": "kubepattern.it/v1",
+    "kind": "Pattern",
+    "metadata": {
+        "name": "sidecar",
+        "displayName": "Sidecar",
+        "patternType": "STRUCTURAL",
+        "severity": "INFO",
+        "category": "architecture",
+        "gitUrl": "https://github.com/GabrieleGroppo/kubepattern-registry/tree/main/doc/sidecar-pattern.md",
+        "docUrl": "https://github.com/GabrieleGroppo/kubepattern-registry/tree/main/doc/sidecar-pattern.json"
+    },
+    "spec": {
+        "description": "Identifies pods that should implement the sidecar pattern but are incorrectly separated into different pods. The sidecar pattern places helper containers alongside the main application container in the same pod to share lifecycle, network, and storage resources. Common use cases include logging, monitoring, configuration management, and service mesh proxies.",
+        "message": "Pod '{{main-app.name}}' in namespace '{{main-app.namespace}}' appears to be separated from its sidecar pod '{{sidecar.name}}' in namespace '{{sidecar.namespace}}'. These pods share volumes and likely have a common lifecycle, suggesting they should be combined into a single pod with multiple containers. This would improve resource sharing, deployment atomicity, and reduce network overhead.",
+        "topology": "LEADER_FOLLOWER",
+        "leader": "main-app",
+        "resources": [
+            {
+                "resource": "Pod",
+                "id": "main-app",
+                "filters": {
+                    "matchAll": [
+                        {
+                            "key": ".spec.volumes",
+                            "operator": "EXISTS",
+                            "values": []
+                        }
+                    ],
+                    "matchNone": [
+                        {
+                            "key": ".metadata.namespace",
+                            "operator": "EQUALS",
+                            "values": [
+                                "kube-system",
+                                "kube-public",
+                                "kube-node-lease",
+                                "krateo-system"
+                            ]
+                        }
+                    ],
+                    "matchAny": [
+                        {
+                            "key": ".metadata.name",
+                            "operator": "EQUALS",
+                            "values": [
+                                "application",
+                                "frontend",
+                                "backend",
+                                "api",
+                                "web",
+                                "service"
+                            ]
+                        },
+                        {
+                            "key": ".metadata.labels.app",
+                            "operator": "EQUALS",
+                            "values": [
+                                "frontend",
+                                "backend",
+                                "application"
+                            ]
+                        },
+                        {
+                            "key": ".metadata.labels.tier",
+                            "operator": "EQUALS",
+                            "values": [
+                                "web",
+                                "api",
+                                "frontend",
+                                "backend"
+                            ]
+                        }
+                    ]
+                }
+            },
+            {
+                "resource": "Pod",
+                "id": "sidecar",
+                "filters": {
+                    "matchAll": [
+                        {
+                            "key": ".spec.volumes",
+                            "operator": "EXISTS",
+                            "values": []
+                        }
+                    ],
+                    "matchNone": [
+                        {
+                            "key": ".metadata.namespace",
+                            "operator": "EQUALS",
+                            "values": [
+                                "kube-system",
+                                "kube-public",
+                                "kube-node-lease"
+                            ]
+                        }
+                    ],
+                    "matchAny": [
+                        {
+                            "key": ".metadata.name",
+                            "operator": "EQUALS",
+                            "values": [
+                                "logging",
+                                "logger",
+                                "log",
+                                "log-collector",
+                                "log-shipper",
+                                "fluentd",
+                                "filebeat",
+                                "logstash"
+                            ]
+                        },
+                        {
+                            "key": ".metadata.labels.app",
+                            "operator": "EQUALS",
+                            "values": [
+                                "logging",
+                                "logger",
+                                "log-collector"
+                            ]
+                        },
+                        {
+                            "key": ".metadata.labels.component",
+                            "operator": "EQUALS",
+                            "values": [
+                                "log-collector",
+                                "log-shipper",
+                                "logging",
+                                "monitoring",
+                                "metrics"
+                            ]
+                        }
+                    ]
+                }
+            }
+        ],
+        "relationships": [
+            {
+                "id": "shared-volume-mount",
+                "type": "MOUNTS",
+                "description": "Both pods mount volumes with the same name or emptyDir type, indicating they are intended to share storage. In a proper sidecar pattern, these containers should share the same pod-level volume.",
+                "weight": 0.6,
+                "required": true,
+                "shared": true,
+                "resourceIds": [
+                    "main-app",
+                    "sidecar"
+                ]
+            }
+        ],
+    }
+}
 ```
 
 ## Pattern Analysis Logic
 
 ### Execution Flow
 
-1. **Global Filter Application**: Apply `globalFilters` to all cluster resources
-2. **Resource Matching**: Find resources matching each `resources` definition
-3. **Relationship Validation**: Validate all `relationships` between matched resources
-4. **Shared Condition Checking**: Verify all `shared` conditions
-5. **Leader Selection**: If `leader` is specified, group results by leader resource
-6. **Pattern Reporting**: Generate pattern matches with appropriate messages
+1. ...
 
 ### Leader Resource Logic
 
@@ -319,13 +320,7 @@ spec:
 ## Best Practices
 
 1. **Use specific resource IDs** to improve pattern readability
-2. **Define clear relationship types** appropriate to your pattern
-3. **Set `required: true`** for essential relationships
-4. **Use `leader` for complex patterns** to reduce false positives
-5. **Provide meaningful descriptions** for relationships
-6. **Test relationship conditions** thoroughly
-7. **Use `shared` conditions** for generic cross-resource validation
-8. **Apply appropriate `globalFilters`** to exclude system namespaces
+2. ...
 
 ## Error Handling
 
