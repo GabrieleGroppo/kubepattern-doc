@@ -1,4 +1,4 @@
 # This is the official KubePattern documentation
 The documentation is built on [Docusaurus](https://docusaurus.io/) ♥️
 
-[Documentation website](docs.kubepattern.it)
+[Documentation website](http://docs.kubepattern.it)
