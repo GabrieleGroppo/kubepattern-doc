@@ -83,7 +83,7 @@ const config = {
         respectPrefersColorScheme: true,
       },
       navbar: {
-        title: 'KubePattern',
+        title: 'KubePattern Docs',
         logo: {
           alt: 'KubePattern Logo',
           src: '/img/kubepattern.svg',
