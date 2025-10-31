@@ -10,7 +10,7 @@ import {themes as prismThemes} from 'prism-react-renderer';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'KubePattern',
+  title: 'KubePattern Docs',
   tagline: 'A tool to hint Kubernetes Architectural Patterns & Best Practices.',
   favicon: 'img/kubepattern.svg',
 
