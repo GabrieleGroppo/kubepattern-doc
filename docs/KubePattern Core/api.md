@@ -2,7 +2,7 @@
 sidebar_position: 5
 ---
 
-# API Reference
+# API
 
 KubePattern exposes a RESTful API for programmatic interaction with the pattern analysis engine and cluster graph visualization.
 
@@ -168,7 +168,7 @@ spec:
 | `referenceLink` | string | Documentation URL pointing to pattern registry |
 | `message` | string | Contextual recommendation or informational message specific to detected resources |
 | `severity` | enum | `INFO`, `WARNING`, `CRITICAL` |
-| `confidence` | enum | `LOW` (<40), `MEDIUM` (40-70), `HIGH` (>70) |
+| `confidence` | enum | `LOW`, `MEDIUM`, `HIGH` |
 | `category` | enum | `Reliability`, `Security`, `Performance` |
 | `suppress` | boolean | Flag to suppress false positives |
 | `scores` | array | Individual check scores with category name and score (0-100) |
