@@ -1,3 +1,9 @@
+---
+sidebar_position: 4
+id: pac-api
+title: Pattern As Code API
+slug: /pattern-as-code/pac-api
+---
 # Kubernetes Pattern Detection API Documentation
 
 ## API version `v1.0.0`

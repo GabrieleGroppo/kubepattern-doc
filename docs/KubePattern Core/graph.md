@@ -1,5 +1,8 @@
 ---
 sidebar_position: 1
+id: graph
+title: Graph
+slug: /kubepattern-core/graph
 ---
 # Resource Graph
 

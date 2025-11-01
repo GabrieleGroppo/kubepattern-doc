@@ -1,5 +1,8 @@
 ---
 sidebar_position: 4
+id: relationships
+title: Relationships
+slug: /kubepattern-core/relationships
 ---
 # Relationships
 

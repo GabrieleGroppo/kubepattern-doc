@@ -1,5 +1,8 @@
 ---
 sidebar_position: 5
+id: api
+title: API
+slug: /kubepattern-core/api
 ---
 
 # API
