@@ -1,8 +1,8 @@
 ---
 sidebar_position: 4
-id: contributions
+id: contributing
 title: Contributions
-slug: /contributions
+slug: /contributing
 ---
 # 🚀 Contributions are welcome!
 
