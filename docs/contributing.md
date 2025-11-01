@@ -1,3 +1,9 @@
+---
+sidebar_position: 4
+id: contributions
+title: Contributions
+slug: /contributions
+---
 # 🚀 Contributions are welcome!
 
 We're thrilled you're interested in contributing to KubePattern! As an open-source project, we thrive on community support, and every contribution, big or small, is highly valued. Whether you're a developer, a Kubernetes architect, or just a documentation enthusiast, there are many ways to get involved.
