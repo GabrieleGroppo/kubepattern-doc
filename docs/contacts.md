@@ -5,7 +5,7 @@ slug: /contacts
 idebar_position: 5
 ---
 
-# Contact Us
+# 🆘 Contacts
 
 ## 🐞 Report a Bug or Request a Feature
 
