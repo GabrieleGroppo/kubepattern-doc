@@ -41,12 +41,12 @@ The **Kubernetes Pattern Detection API** allows you to write **rules** to identi
 | `category`    | enum   | Yes      | Category: `BestPractice`, `Security`, `Reliability`, `Performance`, `CostOptimization` |
 | `docUrl`      | string | No       | URL to pattern documentation                                                           |
 | `gitUrl`      | string | No       | URL to Git repository containing pattern rules                                         |
+| `description` | string | No       | Brief description of the pattern                      								 |
 
 ### `spec`
 
 | Property        | Type   | Required | Description                                         |
 | --------------- | ------ | -------- | --------------------------------------------------- |
-| `description`   | string | Yes      | Brief description of the pattern                    |
 | `message`       | string | Yes      | Message displayed when pattern is matched           |
 | `topology`      | enum   | Yes      | Topology: `LEADER_FOLLOWER`, `SINGLE`               |
 | `leader`        | string | Yes      | Name of Pattern Leader (es: main-container)         |
@@ -166,10 +166,10 @@ The `key` property supports JSONPath-like syntax for accessing Kubernetes resour
         "severity": "INFO",
         "category": "architecture",
         "gitUrl": "https://github.com/GabrieleGroppo/kubepattern-registry/tree/main/doc/sidecar-pattern.md",
-        "docUrl": "https://github.com/GabrieleGroppo/kubepattern-registry/tree/main/doc/sidecar-pattern.json"
+        "docUrl": "https://github.com/GabrieleGroppo/kubepattern-registry/tree/main/doc/sidecar-pattern.json",
+        "description": "Identifies pods that should implement the sidecar pattern but are incorrectly separated into different pods. The sidecar pattern places helper containers alongside the main application container in the same pod to share lifecycle, network, and storage resources. Common use cases include logging, monitoring, configuration management, and service mesh proxies."
     },
     "spec": {
-        "description": "Identifies pods that should implement the sidecar pattern but are incorrectly separated into different pods. The sidecar pattern places helper containers alongside the main application container in the same pod to share lifecycle, network, and storage resources. Common use cases include logging, monitoring, configuration management, and service mesh proxies.",
         "message": "Pod '{{main-app.name}}' in namespace '{{main-app.namespace}}' appears to be separated from its sidecar pod '{{sidecar.name}}' in namespace '{{sidecar.namespace}}'. These pods share volumes and likely have a common lifecycle, suggesting they should be combined into a single pod with multiple containers. This would improve resource sharing, deployment atomicity, and reduce network overhead.",
         "topology": "LEADER_FOLLOWER",
         "leader": "main-app",
