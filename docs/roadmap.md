@@ -39,7 +39,7 @@ This roadmap represents my current vision and priorities. It is not a delivery p
 
 ## ✅ Recently Launched
 
-*The big features we've shipped in the last few months. For a full list, please visit our [Changelog](link-to-your-changelog).*
+*The big features recentely launched 🚀*
 
 * [x] **Pattern As Code Linter:** Lint your pattern as code with API and prevent malformed pattern from being analyzed.
 * [x] **CRD output:** A CRD output for found patterns. 
