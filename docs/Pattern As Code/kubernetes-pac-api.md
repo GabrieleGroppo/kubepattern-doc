@@ -49,7 +49,6 @@ The **Kubernetes Pattern Detection API** allows you to write **rules** to identi
 | --------------- | ------ | -------- | --------------------------------------------------- |
 | `message`       | string | Yes      | Message displayed when pattern is matched           |
 | `topology`      | enum   | Yes      | Topology: `LEADER_FOLLOWER`, `SINGLE`               |
-| `leader`        | string | Yes      | Name of Pattern Leader (es: main-container)         |
 | `resources`     | array  | Yes      | Array of resource definitions (minimum 1 required)  |
 | `relationships` | array  | No       | Array of relationship definitions between resources |
 
@@ -62,6 +61,7 @@ Each resource in the `resources` array must contain:
 |---|---|---|---|
 |`resource`|string|Yes|Kubernetes resource kind (e.g., "Pod", "Service", "Deployment")|
 |`id`|string|Yes|Unique identifier for the resource within the pattern (es: main-container) |
+|`leader`|boolean|(Requeired Single)| Specify if resource is leader or not. |
 |`filters`|object|No|Filtering conditions for this resource|
 
 ### `spec.resources.filters`
@@ -82,6 +82,16 @@ Each condition within filter arrays contains:
 |`operator`|enum|Yes|Comparison operator (es: EQUALS, CONTAINS, EXISTS)|
 |`values`|array|Conditional|Values to match against (not required for `Exists`/`NotExists`)|
 
+### `spec.actors`
+
+This is an array of resourceIds, the one that cooperate in the pattern.
+
+:::info
+
+Actors must contain at least *one* resource for SINGLE Topology and at least *two* for LEADER_FOLLOWER Topology
+
+:::
+
 ### `spec.relationships`
 
 Each relationship in the `relationships` array contains:
@@ -90,22 +100,23 @@ Each relationship in the `relationships` array contains:
 |---|---|---|---|
 |`type`|enum|Yes|Relationship type (see Supported Relationship Types)|
 |`description`|string|No|Human-readable description of the relationship|
-|`resourceIds`|array|Yes|Array of resource IDs that participate in this relationship|
+|`weight` | float | No | weight of relationship in confidence score|
 |`required`|boolean|Yes|Whether this relationship is mandatory for pattern matching|
-|`conditions`|array|Yes|Array of conditions that define the relationship|
+|`shared`|boolean|Yes|Specify if this relationship must or must no be shared|
+|`resourceIds`|array|Yes|Array of resource IDs that participate in this relationship|
 
-### `spec.relationships.conditions[*]`
+### `spec.commonRelationships`
 
-Each condition in a relationship contains:
+Each relationship in the `commonRelationships` array contains:
 
 |Property|Type|Required|Description|
 |---|---|---|---|
-|`id`|string|Yes|Relationship ID|
-|`type`|enum|Yes|Relationship Type (es: MOUNTS, OWNS, ...)|
-|`description`|string|No|Brief description of the relationship|
-|`shared`|boolean|No|Whether the value must be shared between resources|
-|`weight`|integer|No|Wheight of a Relationship to calculate analysis's confidence|
-|`resourceIds`|array|Yes|Resource Ids that have to match/not match the relationship|
+|`type`|enum|Yes|Relationship type (see Supported Relationship Types)|
+|`description`|string|No|Human-readable description of the relationship|
+|`weight` | float | No | weight of relationship in confidence score|
+|`required`|boolean|Yes|Whether this relationship is mandatory for pattern matching|
+|`shared`|boolean|Yes|Specify if this relationship must or must no be shared|
+|`resourceIds`|array|Yes|Array of resource IDs that participate in this relationship|
 
 ## Supported Relationship Types
 
@@ -151,6 +162,39 @@ The `key` property supports JSONPath-like syntax for accessing Kubernetes resour
 - `spec.nodeName` - Access assigned node
 - `spec.hostNetwork` - Access host network setting
 
+## Pattern Analysis Logic
+
+### Execution Flow
+
+## Leader Resource Logic
+Here is that explanation formatted in English and Markdown.
+
+-----
+
+## Relationships vs. Common Relationships
+
+In the context of resource graph analysis, relationships describe how entities are interconnected. Here is a key distinction:
+
+### Relationships
+
+A **Relationship** refers to a **direct edge (link) between two resources**. It describes a specific, often one-to-one or one-to-many, interaction or dependency.
+
+  * **Concept:** Resource A -- Relationship --> Resource B.
+  * **Example:** A `Deployment` manages a `ReplicaSet`.
+    * `Deployment -- MANAGES --> ReplicaSet` 
+  * **Use Case:** Useful for **filtering resources based on their direct neighbors** in the cluster.
+      * *Example Query: "Find all `ReplicaSet` resources managed by this `Deployment`."*
+
+### Common Relationships
+
+A **Common Relationship** describes a scenario where **two or more source resources share the exact same relationship to a single, common destination resource**.
+
+  * **Concept:** Multiple resources converging on a shared resource.
+  * **Example:** Two different `Pods` both mount the exact same `Volume`. The `Volume` is the common resource.
+    * `Pod A --MOUNTS--> Volume X <--MOUNTS-- Pod B`
+  * **Use Case:** Useful for **filtering or scoring resources based on the common context and interactions** they have.
+      * *Example Query: "Find all `Pods` that mount the same `Volume` as `Pod A`."*
+
 ## Example Usage
 
 ### Simple Sidecar Pattern
@@ -172,11 +216,11 @@ The `key` property supports JSONPath-like syntax for accessing Kubernetes resour
     "spec": {
         "message": "Pod '{{main-app.name}}' in namespace '{{main-app.namespace}}' appears to be separated from its sidecar pod '{{sidecar.name}}' in namespace '{{sidecar.namespace}}'. These pods share volumes and likely have a common lifecycle, suggesting they should be combined into a single pod with multiple containers. This would improve resource sharing, deployment atomicity, and reduce network overhead.",
         "topology": "LEADER_FOLLOWER",
-        "leader": "main-app",
         "resources": [
             {
                 "resource": "Pod",
                 "id": "main-app",
+                "leader": true,
                 "filters": {
                     "matchAll": [
                         {
@@ -293,7 +337,11 @@ The `key` property supports JSONPath-like syntax for accessing Kubernetes resour
                 }
             }
         ],
-        "relationships": [
+        "actors": [
+            "main-app",
+            "sidecar"
+        ],
+        "commonRelationships": [
             {
                 "id": "shared-volume-mount",
                 "type": "MOUNTS",
@@ -307,35 +355,10 @@ The `key` property supports JSONPath-like syntax for accessing Kubernetes resour
                 ]
             }
         ],
+        "relationships": [
+            
+        ]
     }
 }
+
 ```
-
-## Pattern Analysis Logic
-
-### Execution Flow
-
-1. ...
-
-### Leader Resource Logic
-
-- If `leader` is specified, only combinations where the leader resource is present are reported
-- This reduces false positives and complexity in analysis (prevents n! combinations)
-- The leader resource becomes the primary identifier for the pattern instance
-
-## Best Practices
-
-1. **Use specific resource IDs** to improve pattern readability
-2. ...
-
-## Error Handling
-
-The API should handle the following error cases:
-
-- Invalid YAML syntax
-- Missing required fields (`version`, `kind`, `metadata`, `spec`)
-- Invalid relationship types
-- Circular relationship dependencies
-- Invalid resource IDs in relationships
-- Invalid JSONPath expressions in conditions
-- Conflicting shared conditions
