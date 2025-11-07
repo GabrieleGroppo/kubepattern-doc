@@ -19,8 +19,8 @@ This roadmap represents my current vision and priorities. It is not a delivery p
 *Features and improvements we are actively building **right now**.*
 
 * [ ] **Refactoring** Improving code quality
-* [ ] **ChroneJob** Building a chronejob to trigger pattern analysis
 * [ ] **Analysis report** A report to summarize analysis (patterns hits/errors/...)
+* [ ] **Relationship & Common Relationships orchetration** Better handle both relationships & common relationships
 
 ## 🎯 Next (Planned)
 
@@ -28,7 +28,7 @@ This roadmap represents my current vision and priorities. It is not a delivery p
 
 * [ ] **API to build patterns with AI** Build patterns using AI based on you current cluster context and Online Kubernetes Best Practices.
     * [ ] set resource limit based on number of crashes.
-* [ ] **Resource Status Heuristic:** es: resource limit based on number of crashes...
+
 * [ ] **Dynamic Analysis:** Dynamic analysis to improve complex patterns confidence score precision.
 
 ## 🤔 Later (Considering)
@@ -47,3 +47,9 @@ This roadmap represents my current vision and priorities. It is not a delivery p
 
 * [x] **Pattern As Code Linter:** Lint your pattern as code with API and prevent malformed pattern from being analyzed.
 * [x] **CRD output:** A CRD output for found patterns. 
+* [x] **ChroneJob** Building a chronejob to periodically trigger pattern analysis
+* [x] **ServiceAccount** Building a service account to allow kubepattern to contact cluster
+* [x] **Role & Cluster Role** Building a service account to allow cluster reosurces access to kubepattern
+* [x] **Serice to Expose Deployment** Building a service to access KubePattern APIs inside the cluster
+* [x] **Deployment** Deployment to guarantee service continuity
+* [x] **Array FilterOpeators:** new FilterOperators to check array size
