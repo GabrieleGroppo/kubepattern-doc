@@ -27,6 +27,8 @@ This roadmap represents my current vision and priorities. It is not a delivery p
 *Features I will be working on **immediately after** what's currently in progress.*
 
 * [ ] **API to build patterns with AI** Build patterns using AI based on you current cluster context and Online Kubernetes Best Practices.
+    * [ ] set resource limit based on number of crashes.
+* [ ] **Resource Status Euristick:** resource limit based on number of crashes
 * [ ] **Dynamic Analysis:** Dynamic analysis to improve complex patterns confidence score precision.
 
 ## 🤔 Later (Considering)
@@ -36,6 +38,7 @@ This roadmap represents my current vision and priorities. It is not a delivery p
 * [ ] **Relationship As Code:** Defining relationships through json or yaml.
 * [ ] **Score pattern confidence using AI:** AI Scoring.
 * [ ] **Web dashboard:** View Patterns and Resource Graph in a web dashboard.
+* [ ] **Composable patterns:** make patterns use other patterns to reduce pattern duplications.
 
 ## ✅ Recently Launched
 
