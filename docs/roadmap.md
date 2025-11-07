@@ -39,6 +39,7 @@ This roadmap represents my current vision and priorities. It is not a delivery p
 * [ ] **Score pattern confidence using AI:** AI Scoring.
 * [ ] **Web dashboard:** View Patterns and Resource Graph in a web dashboard.
 * [ ] **Composable patterns:** make patterns use other patterns to reduce pattern duplications.
+* [ ] **JQ queries for filters:** using more powerful jq queries for filtering resource (they are also more complex to build).
 
 ## ✅ Recently Launched
 
