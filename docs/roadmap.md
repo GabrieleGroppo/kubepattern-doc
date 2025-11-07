@@ -28,7 +28,7 @@ This roadmap represents my current vision and priorities. It is not a delivery p
 
 * [ ] **API to build patterns with AI** Build patterns using AI based on you current cluster context and Online Kubernetes Best Practices.
     * [ ] set resource limit based on number of crashes.
-* [ ] **Resource Status Euristick:** resource limit based on number of crashes
+* [ ] **Resource Status Heuristic:** es: resource limit based on number of crashes...
 * [ ] **Dynamic Analysis:** Dynamic analysis to improve complex patterns confidence score precision.
 
 ## 🤔 Later (Considering)
