@@ -4,7 +4,7 @@ id: getting-started
 title: Getting Started
 slug: /getting-started
 ---
-# 🤯 Getting started
+# Getting started
 :::warning
 
 KubePattern is also my Bachelor Degree Thesis Project and is **currently under development**. 

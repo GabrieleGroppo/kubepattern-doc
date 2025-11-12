@@ -2,7 +2,7 @@
 sidebar_position: 1
 title: Overview
 ---
-# 📜 Overview
+# Overview
 
 KubePattern is an innovative static analysis tool for Kubernetes manifests that goes beyond traditional linting, focusing on recognizing and suggesting cloud-native architectural patterns.
 

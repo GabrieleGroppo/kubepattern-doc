@@ -4,7 +4,7 @@ id: roadmap
 title: Roadmap
 slug: /roadmap
 ---
-# 👣 Roadmap
+# Roadmap
 Welcome to our public roadmap! This is where you can see what I am working on, what I have planned for the near future, and what ideas I am considering.
 
 :::warning
