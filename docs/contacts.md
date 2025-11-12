@@ -6,9 +6,8 @@ sidebar_position: 5
 ---
 
 ## Quink links
-- [**Open a New Issue**](https://github.com/GabrieleGroppo/kubepattern/issues/new/choose)
-- [**Ask questions (Email)**](mailto:gabriele.groppo03@gmail.com)
-- [**Partnerships (Email)**](mailto:g.groppo@campus.unimib.it)
+- 🐞[**Report problems & Feature Requests (GitHub Issues)**](https://github.com/GabrieleGroppo/kubepattern/issues/new/choose)
+- 💬[**Questions & Community (Telegram)**](https://t.me/+WUtGohZ5ZS44MjQ0)
 
 ## Contacts
 - [gabriele.groppo03@gmail.com](mailto:gabriele.groppo03@gmail.com)
