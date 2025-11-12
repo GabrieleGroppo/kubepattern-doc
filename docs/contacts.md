@@ -5,19 +5,11 @@ slug: /contacts
 sidebar_position: 5
 ---
 
-# Contacts
-## Report a Bug or Request a Feature
+## Quink links
+- [**Open a New Issue**](https://github.com/GabrieleGroppo/kubepattern/issues/new/choose)
+- [**Ask questions (Email)**](mailto:gabriele.groppo03@gmail.com)
+- [**Partnerships (Email)**](mailto:g.groppo@campus.unimib.it)
 
-Found a technical problem or have an idea to improve the project? The best way to report it is through **GitHub Issues**.
-
-* [**Open a New Issue**](https://github.com/GabrieleGroppo/kubepattern/issues/new/choose)
-
-## Email
-
-- For **questions**, **help**, **new ideas** ==> [gabriele.groppo03@gmail.com](mailto:gabriele.groppo03@gmail.com)
-- For **partnerships** ==> [g.groppo@campus.unimib.it](mailto:g.groppo@campus.unimib.it)
-
-## Telegram
-
-## My Projects
-Discover them on [gabrielegroppo.it](https://gabrielegroppo.it)
+## Contacts
+- [gabriele.groppo03@gmail.com](mailto:gabriele.groppo03@gmail.com)
+- [gabrielegroppo.it](https://gabrielegroppo.it)

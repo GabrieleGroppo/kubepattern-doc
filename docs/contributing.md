@@ -12,7 +12,7 @@ As an open-source project, we thrive on community support, and every contributio
 
 ### How You Can Help ❤️
 
-You don't have to be a Java expert to make a significant impact. Here are some of the best ways to contribute:
+Here are some of the best ways to contribute:
 
 * **Define New Patterns:** This is the most unique and impactful way to help. Thanks to our **Pattern-as-Code** approach, you can contribute new architectural patterns simply by creating or updating a JSON file. If you have identified a common best practice, a security vulnerability, or a reliability pattern, please share it! Check out our [Pattern Catalog](https://github.com/GabrieleGroppo/kubepattern-registry) to get started.
 * **Report Bugs:** If you find something that isn't working as expected, please [open an issue](https://github.com/GabrieleGroppo/kubepattern/issues) on GitHub. Be sure to include steps to reproduce the problem and any relevant manifest files.
