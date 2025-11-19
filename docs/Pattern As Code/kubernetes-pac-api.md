@@ -1,7 +1,7 @@
 ---
-sidebar_position: 4
+sidebar_position: 2
 id: pac-api
-title: Pattern As Code API
+title: Write Pattern-as-Code
 slug: /pattern-as-code/pac-api
 ---
 # Kubernetes Pattern Detection API Documentation

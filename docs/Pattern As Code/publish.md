@@ -1,7 +1,7 @@
 ---
 sidebar_position: 3
 id: publish-pac
-title: Publish Patterns
+title: Publish Patterns-as-Code
 slug: /pattern-as-code/publish-pac
 ---
 
