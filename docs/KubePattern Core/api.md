@@ -1,5 +1,5 @@
 ---
-sidebar_position: 5
+sidebar_position: 3
 id: api
 title: API
 slug: /kubepattern-core/api
