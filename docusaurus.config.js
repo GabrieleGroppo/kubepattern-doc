@@ -1,44 +1,46 @@
 // @ts-check
-// `@type` JSDoc annotations allow editor autocompletion and type checking
-// (when paired with `@ts-check`).
-// There are various equivalent ways to declare your Docusaurus config.
-// See: https://docusaurus.io/docs/api/docusaurus-config
-
 import {themes as prismThemes} from 'prism-react-renderer';
-
-// This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'KubePattern Docs',
+  title: 'KubePattern',
   tagline: 'A tool to hint Kubernetes Architectural Patterns & Best Practices.',
   favicon: 'img/kubepattern.svg',
 
-  // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
   future: {
-    v4: true, // Improve compatibility with the upcoming Docusaurus v4
+    v4: true,
   },
 
-  // Set the production url of your site here
-  url: 'https://docs.kubepattern.it',
-  // Set the /<baseUrl>/ pathname under which your site is served
-  // For GitHub pages deployment, it is often '/<projectName>/'
+  // IMPORTANTE: Configurazione per il dominio unificato
+  url: 'https://kubepattern.it',
   baseUrl: '/',
 
-  // GitHub pages deployment config.
-  // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'GabrieleGroppo', // Usually your GitHub org/user name.
-  projectName: 'kuepattern-doc', // Usually your repo name.
+  organizationName: 'GabrieleGroppo',
+  projectName: 'kubepattern',
 
   onBrokenLinks: 'throw',
+  onBrokenMarkdownLinks: 'warn',
 
-  // Even if you don't use internationalization, you can use this field to set
-  // useful metadata like html lang. For example, if your site is Chinese, you
-  // may want to replace "en" with "zh-Hans".
   i18n: {
     defaultLocale: 'en',
     locales: ['en'],
   },
+
+  // Script esterni per FontAwesome
+  scripts: [
+    {
+      src: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js',
+      async: true,
+    },
+  ],
+
+  // Stylesheets esterni per FontAwesome
+  stylesheets: [
+    {
+      href: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
+      type: 'text/css',
+    },
+  ],
 
   presets: [
     [
@@ -46,8 +48,13 @@ const config = {
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
         docs: {
-          routeBasePath: '/',
+          routeBasePath: 'docs', // La documentazione sarà su /docs
           sidebarPath: './sidebars.js',
+          editUrl: 'https://github.com/GabrieleGroppo/kubepattern/tree/main/',
+        },
+        blog: {
+          showReadingTime: true,
+          editUrl: 'https://github.com/GabrieleGroppo/kubepattern/tree/main/',
         },
         theme: {
           customCss: './src/css/custom.css',
@@ -59,20 +66,32 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
-      // Replace with your project's social card
-      image: 'img/docusaurus-social-card.jpg',
+      image: 'img/kubepattern.svg',
+      
+      // Metadata SEO
+      metadata: [
+        {name: 'keywords', content: 'kubernetes, pattern, best-practices, pattern-as-code, cloud-native'},
+        {name: 'og:type', content: 'website'},
+      ],
+      
       colorMode: {
         respectPrefersColorScheme: true,
       },
+      
       navbar: {
-        title: 'KubePattern Docs',
+        title: 'KubePattern',
         logo: {
           alt: 'KubePattern Logo',
-          src: '/img/kubepattern.svg',
+          src: 'img/kubepattern.svg',
         },
         items: [
-
-          /*{to: '/blog', label: 'Blog', position: 'left'},*/
+          {
+            type: 'docSidebar',
+            sidebarId: 'kubepatternSidebar',
+            position: 'left',
+            label: 'Docs',
+          },
+          {to: '/blog', label: 'Blog', position: 'left'},
           {
             href: 'https://github.com/GabrieleGroppo/kubepattern',
             label: 'GitHub',
@@ -80,14 +99,69 @@ const config = {
           },
         ],
       },
+      
       footer: {
         style: 'dark',
-        links: [],
-        copyright: `Copyright © ${new Date().getFullYear()} KubePattern`,
+        links: [
+          {
+            title: 'Resources',
+            items: [
+              {
+                label: 'Documentation',
+                to: '/docs/overview',
+              },
+              {
+                label: 'Pattern Catalog',
+                href: 'https://github.com/GabrieleGroppo/kubepattern-registry',
+              },
+              {
+                label: 'Getting Started',
+                to: '/docs/getting-started',
+              },
+            ],
+          },
+          {
+            title: 'Community',
+            items: [
+              {
+                label: 'GitHub Issues',
+                href: 'https://github.com/GabrieleGroppo/kubepattern/issues',
+              },
+              {
+                label: 'Contributing',
+                to: '/docs/contributing',
+              },
+              {
+                label: 'Telegram',
+                href: 'https://t.me/+WUtGohZ5ZS44MjQ0',
+              },
+            ],
+          },
+          {
+            title: 'More',
+            items: [
+              {
+                label: 'Blog',
+                to: '/blog',
+              },
+              {
+                label: 'Roadmap',
+                to: '/docs/roadmap',
+              },
+              {
+                label: 'Author',
+                href: 'https://gabrielegroppo.it',
+              },
+            ],
+          },
+        ],
+        copyright: `Copyright © ${new Date().getFullYear()} KubePattern. Open Source under GNU General Public License v3.0.`,
       },
+      
       prism: {
         theme: prismThemes.github,
         darkTheme: prismThemes.dracula,
+        additionalLanguages: ['yaml', 'json', 'bash'],
       },
     }),
 };
