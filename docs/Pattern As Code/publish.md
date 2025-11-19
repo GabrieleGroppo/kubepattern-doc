@@ -1,7 +1,7 @@
 ---
 sidebar_position: 3
 id: publish-pac
-title: How to Publish Pattern-as-Code
+title: Publish Patterns
 slug: /pattern-as-code/publish-pac
 ---
 
@@ -13,15 +13,15 @@ Share your Kubernetes patterns with the community by publishing them to a patter
 
 To contribute your pattern to the KubePattern official registry:
 
-1. **Fork the repository**
+### 1. Fork the repository
 ```bash
    git clone https://github.com/your-org/kubepattern-registry.git
    cd kubepattern-registry
 ```
 
-2. **Create your pattern definition**
+### 2. Create your pattern definition
    
-   Add your pattern file in the `definitions/` folder:
+Add your pattern file in the `definitions/` folder:
 ```bash
    definitions/
    ├── predictable-demands.yaml
@@ -29,7 +29,7 @@ To contribute your pattern to the KubePattern official registry:
    └── your-pattern-name.yaml  # Your new pattern
 ```
 
-3. **Submit a pull request**
+### 3. Submit a pull request
    
    Once your pattern is ready, open a PR to merge it into the official registry.
 
