@@ -82,7 +82,3 @@ spec:
       namespace: development
       uid: 1b2c3d4e-5f6g-7h8i-9j0k-1l2m3n4o5p6q
 ```
-
-## Next Steps
-
-- [Getting Started](./getting-started): Start using KubePattern
