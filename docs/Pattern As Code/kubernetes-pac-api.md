@@ -4,9 +4,10 @@ id: pac-api
 title: Write Pattern-as-Code
 slug: /pattern-as-code/pac-api
 ---
+
 # Kubernetes Pattern Detection API Documentation
 
-## API version `v1.0.0`
+## API version `v1.1.0`
 
 ## Overview
 
@@ -32,26 +33,26 @@ The **Kubernetes Pattern Detection API** allows you to write **rules** to identi
 
 ### `metadata`
 
-| Property      | Type   | Required | Description                                                                            |
-| ------------- | ------ | -------- | -------------------------------------------------------------------------------------- |
-| `name`        | string | Yes      | Name of the pattern (es: my-pattern)                                                   |
-| `displayName`        | string | Yes      | Name of the pattern (es: My Pattern)                                            |
-| `patternType` | enum   | Yes      | Type: `STRUCTURAL`, `BEHAVIORAL`, `FUNCTIONAL`, ...                                    |
-| `severity`    | enum   | Yes      | Severity level: `CRITICAL`, `WARNING`, `INFO`                                          |
-| `category`    | enum   | Yes      | Category: `BestPractice`, `Security`, `Reliability`, `Performance`, `CostOptimization` |
-| `docUrl`      | string | No       | URL to pattern documentation                                                           |
-| `gitUrl`      | string | No       | URL to Git repository containing pattern rules                                         |
-| `description` | string | No       | Brief description of the pattern                      								 |
+| Property | Type | Required | Description |
+| :--- | :--- | :--- | :--- |
+| `name` | string | Yes | Name of the pattern (e.g., `my-pattern`) |
+| `displayName` | string | Yes | Display name of the pattern (e.g., `My Pattern`) |
+| `patternType` | enum | Yes | Type: `STRUCTURAL`, `BEHAVIORAL`, `FUNCTIONAL`, ... |
+| `severity` | enum | Yes | Severity level: `CRITICAL`, `WARNING`, `INFO` |
+| `category` | enum | Yes | Category: `BestPractice`, `Security`, `Reliability`, `Performance`, `CostOptimization` |
+| `docUrl` | string | No | URL to pattern documentation |
+| `gitUrl` | string | No | URL to Git repository containing pattern rules |
+| `description` | string | No | Brief description of the pattern |
 
 ### `spec`
 
-| Property        | Type   | Required | Description                                         |
-| --------------- | ------ | -------- | --------------------------------------------------- |
-| `message`       | string | Yes      | Message displayed when pattern is matched           |
-| `topology`      | enum   | Yes      | Topology: `LEADER_FOLLOWER`, `SINGLE`               |
-| `resources`     | array  | Yes      | Array of resource definitions (minimum 1 required)  |
-| `relationships` | array  | No       | Array of relationship definitions between resources |
-
+| Property | Type | Required | Description |
+| :--- | :--- | :--- | :--- |
+| `message` | string | Yes | Message displayed when pattern is matched |
+| `topology` | enum | Yes | Topology: `LEADER_FOLLOWER`, `SINGLE` |
+| `resources` | array | Yes | Array of resource definitions (minimum 1 required) |
+| `relationships` | array | No | Array of relationship definitions between resources |
+| `minRelationshipPoints`| integer| No | **New:** Minimum score required for `required: false` relationships to validate the pattern. Default: 0. |
 
 ### `spec.resources`
 
@@ -60,8 +61,8 @@ Each resource in the `resources` array must contain:
 |Property|Type|Required|Description|
 |---|---|---|---|
 |`resource`|string|Yes|Kubernetes resource kind (e.g., "Pod", "Service", "Deployment")|
-|`id`|string|Yes|Unique identifier for the resource within the pattern (es: main-container) |
-|`leader`|boolean|(Requeired Single)| Specify if resource is leader or not. |
+|`id`|string|Yes|Unique identifier for the resource within the pattern (e.g., `main-container`) |
+|`leader`|boolean|(Req Single)| Specify if the resource is the leader (entry point of analysis). |
 |`filters`|object|No|Filtering conditions for this resource|
 
 ### `spec.resources.filters`
@@ -79,58 +80,80 @@ Each condition within filter arrays contains:
 |Property|Type|Required|Description|
 |---|---|---|---|
 |`key`|string|Yes|JSONPath or key to match against|
-|`operator`|enum|Yes|Comparison operator (es: EQUALS, CONTAINS, EXISTS)|
+|`operator`|enum|Yes|Comparison operator (e.g., `EQUALS`, `CONTAINS`, `EXISTS`)|
 |`values`|array|Conditional|Values to match against (not required for `Exists`/`NotExists`)|
 
 ### `spec.actors`
 
-This is an array of resourceIds, the one that cooperate in the pattern.
+This is an array of `resourceIds` that cooperate in the pattern.
 
 :::info
-
-Actors must contain at least *one* resource for SINGLE Topology and at least *two* for LEADER_FOLLOWER Topology
-
+Actors must contain at least *one* resource for SINGLE Topology and at least *two* for LEADER_FOLLOWER Topology.
 :::
 
-### `spec.relationships`
+### `spec.relationships` & `spec.commonRelationships`
 
-Each relationship in the `relationships` array contains:
+Each relationship definition contains:
 
-|Property|Type|Required|Description|
-|---|---|---|---|
-|`type`|enum|Yes|Relationship type (see Supported Relationship Types)|
-|`description`|string|No|Human-readable description of the relationship|
-|`weight` | float | No | weight of relationship in confidence score|
-|`required`|boolean|Yes|Whether this relationship is mandatory for pattern matching|
-|`shared`|boolean|Yes|Specify if this relationship must or must no be shared|
-|`resourceIds`|array|Yes|Array of resource IDs that participate in this relationship|
+| Property | Type | Required | Description |
+| :--- | :--- | :--- | :--- |
+| `type` | enum | Yes | Relationship type (see Supported Relationship Types) |
+| `resourceIds` | array | Yes | Array of resource IDs participating in this relationship |
+| `description` | string | No | Human-readable description |
+| `weight` | float | No | Points awarded if the relationship matches logically (used only if `required: false`). |
+| `required` | boolean | Yes | **Control Flag:** Determines if this is a Veto/Mandatory condition (`true`) or a Scoring condition (`false`). |
+| `shared` | boolean | Yes | **Expected State:** `true` means the relationship MUST exist; `false` means it MUST NOT exist. |
 
-### `spec.commonRelationships`
+---
 
-Each relationship in the `commonRelationships` array contains:
+## Pattern Matching Logic (Veto vs. Scoring)
 
-|Property|Type|Required|Description|
-|---|---|---|---|
-|`type`|enum|Yes|Relationship type (see Supported Relationship Types)|
-|`description`|string|No|Human-readable description of the relationship|
-|`weight` | float | No | weight of relationship in confidence score|
-|`required`|boolean|Yes|Whether this relationship is mandatory for pattern matching|
-|`shared`|boolean|Yes|Specify if this relationship must or must no be shared|
-|`resourceIds`|array|Yes|Array of resource IDs that participate in this relationship|
+The analysis engine uses a combination of strict boolean logic ("Veto") and point-based logic ("Scoring"), determined by the combination of the `required` and `shared` fields.
+
+### 1. The Logic Matrix
+
+The combination of `required` and `shared` defines four distinct behaviors:
+
+| `required` | `shared` | Behavior | Logical Description |
+| :--- | :--- | :--- | :--- |
+| **TRUE** | **TRUE** | **MANDATORY** (Must Have) | The relationship **MUST exist**. If it is missing, the resource is immediately discarded. <br>*(Example: A Deployment must own a ReplicaSet)* |
+| **TRUE** | **FALSE** | **VETO** (Must NOT Have) | The relationship **MUST NOT exist**. If found, the resource is immediately discarded. <br>*(Example: An orphan Table must NOT be connected to any Row)* |
+| **FALSE** | **TRUE** | **SCORE (Positive)** | If the relationship exists, add `weight` to the total score. If missing, nothing happens (non-blocking). <br>*(Example: "Referenced By Any": points if connected to Row OR Panel)* |
+| **FALSE** | **FALSE** | **SCORE (Negative)** | If the relationship **does NOT** exist, add `weight` to the total score. <br>*(Example: Preference for loose coupling/isolation)* |
+
+### 2. Execution Flow
+
+For each candidate "Leader" resource, the engine performs the following steps:
+
+1.  **Veto Phase (Required Checks):**
+    * All relationships with `required: true` are verified.
+    * If even a single condition fails (e.g., finding a relationship when `shared: false`, or missing one when `shared: true`), the resource is **immediately filtered out**.
+
+2.  **Scoring Phase (Scoring Checks):**
+    * If the resource passes the Veto Phase, relationships with `required: false` are evaluated.
+    * Points (`weight`) are added only if the logical condition is met (Positive or Negative match as per the matrix above).
+
+3.  **Threshold Verification:**
+    * The accumulated total score is compared against `spec.minRelationshipPoints`.
+    * If `Total Score < minRelationshipPoints`, the resource is discarded.
+    * Otherwise, it is a **MATCH**.
+
+---
 
 ## Supported Relationship Types
 
-| Tipo | Descrizione / Esempio |
+| Type | Description / Example |
 | :--- | :--- |
 | `OWNS` | Deployment -> ReplicaSet |
 | `MANAGES` | ReplicaSet -> Pod |
 | `MOUNTS` | Pod -> Volume |
 | `EXPOSES` | Service -> Pod |
-| `USES_CONFIG` | Riferimento a ConfigMap/Secret |
+| `USES_CONFIG` | Reference to ConfigMap/Secret |
 | `SAME_NETWORK` | Network policies |
 | `IS_NAMESPACE_OF` | Namespace -> Generic Resource |
 | `USES_SA` | Pod -> ServiceAccount |
 | `HAS_AFFINITY_TO` | Pod -> Pod |
+| `REFERENCES_KRATEO` | Table -> Widget (Custom) |
 
 ## Supported Operators
 
@@ -145,7 +168,6 @@ Each relationship in the `commonRelationships` array contains:
 | `EXISTS` | Key exists |
 | `NOT_EXISTS` | Key does not exist |
 | `IS_EMPTY` | Is empty |
-
 
 ## JSONPath Key Syntax
 
@@ -162,44 +184,11 @@ The `key` property supports JSONPath-like syntax for accessing Kubernetes resour
 - `spec.nodeName` - Access assigned node
 - `spec.hostNetwork` - Access host network setting
 
-## Pattern Analysis Logic
-
-### Execution Flow
-
-## Leader Resource Logic
-Here is that explanation formatted in English and Markdown.
-
------
-
-## Relationships vs. Common Relationships
-
-In the context of resource graph analysis, relationships describe how entities are interconnected. Here is a key distinction:
-
-### Relationships
-
-A **Relationship** refers to a **direct edge (link) between two resources**. It describes a specific, often one-to-one or one-to-many, interaction or dependency.
-
-  * **Concept:** Resource A -- Relationship --> Resource B.
-  * **Example:** A `Deployment` manages a `ReplicaSet`.
-    * `Deployment -- MANAGES --> ReplicaSet` 
-  * **Use Case:** Useful for **filtering resources based on their direct neighbors** in the cluster.
-      * *Example Query: "Find all `ReplicaSet` resources managed by this `Deployment`."*
-
-### Common Relationships
-
-A **Common Relationship** describes a scenario where **two or more source resources share the exact same relationship to a single, common destination resource**.
-
-  * **Concept:** Multiple resources converging on a shared resource.
-  * **Example:** Two different `Pods` both mount the exact same `Volume`. The `Volume` is the common resource.
-    * `Pod A --MOUNTS--> Volume X <--MOUNTS-- Pod B`
-  * **Use Case:** Useful for **filtering or scoring resources based on the common context and interactions** they have.
-      * *Example Query: "Find all `Pods` that mount the same `Volume` as `Pod A`."*
-
 ## Example Usage
 
 ### Simple Sidecar Pattern
 
-```yaml
+```json
 {
     "version": "kubepattern.it/v1",
     "kind": "Pattern",
@@ -209,12 +198,10 @@ A **Common Relationship** describes a scenario where **two or more source resour
         "patternType": "STRUCTURAL",
         "severity": "INFO",
         "category": "architecture",
-        "gitUrl": "https://github.com/GabrieleGroppo/kubepattern-registry/tree/main/doc/sidecar-pattern.md",
-        "docUrl": "https://github.com/GabrieleGroppo/kubepattern-registry/tree/main/doc/sidecar-pattern.json",
-        "description": "Identifies pods that should implement the sidecar pattern but are incorrectly separated into different pods. The sidecar pattern places helper containers alongside the main application container in the same pod to share lifecycle, network, and storage resources. Common use cases include logging, monitoring, configuration management, and service mesh proxies."
+        "description": "Identifies pods that should implement the sidecar pattern but are incorrectly separated."
     },
     "spec": {
-        "message": "Pod '{{main-app.name}}' in namespace '{{main-app.namespace}}' appears to be separated from its sidecar pod '{{sidecar.name}}' in namespace '{{sidecar.namespace}}'. These pods share volumes and likely have a common lifecycle, suggesting they should be combined into a single pod with multiple containers. This would improve resource sharing, deployment atomicity, and reduce network overhead.",
+        "message": "Pod '{{main-app.name}}' appears to be separated from its sidecar pod '{{sidecar.name}}'.",
         "topology": "LEADER_FOLLOWER",
         "resources": [
             {
@@ -222,57 +209,8 @@ A **Common Relationship** describes a scenario where **two or more source resour
                 "id": "main-app",
                 "leader": true,
                 "filters": {
-                    "matchAll": [
-                        {
-                            "key": ".spec.volumes",
-                            "operator": "EXISTS",
-                            "values": []
-                        }
-                    ],
-                    "matchNone": [
-                        {
-                            "key": ".metadata.namespace",
-                            "operator": "EQUALS",
-                            "values": [
-                                "kube-system",
-                                "kube-public",
-                                "kube-node-lease",
-                                "krateo-system"
-                            ]
-                        }
-                    ],
                     "matchAny": [
-                        {
-                            "key": ".metadata.name",
-                            "operator": "EQUALS",
-                            "values": [
-                                "application",
-                                "frontend",
-                                "backend",
-                                "api",
-                                "web",
-                                "service"
-                            ]
-                        },
-                        {
-                            "key": ".metadata.labels.app",
-                            "operator": "EQUALS",
-                            "values": [
-                                "frontend",
-                                "backend",
-                                "application"
-                            ]
-                        },
-                        {
-                            "key": ".metadata.labels.tier",
-                            "operator": "EQUALS",
-                            "values": [
-                                "web",
-                                "api",
-                                "frontend",
-                                "backend"
-                            ]
-                        }
+                        { "key": ".metadata.labels.app", "operator": "EQUALS", "values": ["frontend", "backend"] }
                     ]
                 }
             },
@@ -280,85 +218,24 @@ A **Common Relationship** describes a scenario where **two or more source resour
                 "resource": "Pod",
                 "id": "sidecar",
                 "filters": {
-                    "matchAll": [
-                        {
-                            "key": ".spec.volumes",
-                            "operator": "EXISTS",
-                            "values": []
-                        }
-                    ],
-                    "matchNone": [
-                        {
-                            "key": ".metadata.namespace",
-                            "operator": "EQUALS",
-                            "values": [
-                                "kube-system",
-                                "kube-public",
-                                "kube-node-lease"
-                            ]
-                        }
-                    ],
                     "matchAny": [
-                        {
-                            "key": ".metadata.name",
-                            "operator": "EQUALS",
-                            "values": [
-                                "logging",
-                                "logger",
-                                "log",
-                                "log-collector",
-                                "log-shipper",
-                                "fluentd",
-                                "filebeat",
-                                "logstash"
-                            ]
-                        },
-                        {
-                            "key": ".metadata.labels.app",
-                            "operator": "EQUALS",
-                            "values": [
-                                "logging",
-                                "logger",
-                                "log-collector"
-                            ]
-                        },
-                        {
-                            "key": ".metadata.labels.component",
-                            "operator": "EQUALS",
-                            "values": [
-                                "log-collector",
-                                "log-shipper",
-                                "logging",
-                                "monitoring",
-                                "metrics"
-                            ]
-                        }
+                        { "key": ".metadata.labels.app", "operator": "EQUALS", "values": ["logging", "monitoring"] }
                     ]
                 }
             }
         ],
-        "actors": [
-            "main-app",
-            "sidecar"
-        ],
+        "actors": [ "main-app", "sidecar" ],
         "commonRelationships": [
             {
                 "id": "shared-volume-mount",
                 "type": "MOUNTS",
-                "description": "Both pods mount volumes with the same name or emptyDir type, indicating they are intended to share storage. In a proper sidecar pattern, these containers should share the same pod-level volume.",
+                "description": "Both pods mount volumes with the same name.",
                 "weight": 0.6,
                 "required": true,
                 "shared": true,
-                "resourceIds": [
-                    "main-app",
-                    "sidecar"
-                ]
+                "resourceIds": [ "main-app", "sidecar" ]
             }
         ],
-        "relationships": [
-            
-        ]
+        "minRelationshipPoints": 0
     }
 }
-
-```
