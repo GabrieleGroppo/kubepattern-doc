@@ -116,10 +116,10 @@ The combination of `required` and `shared` defines four distinct behaviors:
 
 | `required` | `shared` | Behavior | Logical Description |
 | :--- | :--- | :--- | :--- |
-| **TRUE** | **TRUE** | **MANDATORY** (Must Have) | The relationship **MUST exist**. If it is missing, the resource is immediately discarded. <br>*(Example: A Deployment must own a ReplicaSet)* |
-| **TRUE** | **FALSE** | **VETO** (Must NOT Have) | The relationship **MUST NOT exist**. If found, the resource is immediately discarded. <br>*(Example: An orphan Table must NOT be connected to any Row)* |
-| **FALSE** | **TRUE** | **SCORE (Positive)** | If the relationship exists, add `weight` to the total score. If missing, nothing happens (non-blocking). <br>*(Example: "Referenced By Any": points if connected to Row OR Panel)* |
-| **FALSE** | **FALSE** | **SCORE (Negative)** | If the relationship **does NOT** exist, add `weight` to the total score. <br>*(Example: Preference for loose coupling/isolation)* |
+| **TRUE** | **TRUE** | **MANDATORY** (Must Have) | The relationship **MUST exist**. If it is missing, the resource is immediately discarded. <br/>*(Example: A Deployment must own a ReplicaSet)* |
+| **TRUE** | **FALSE** | **VETO** (Must NOT Have) | The relationship **MUST NOT exist**. If found, the resource is immediately discarded. <br/>*(Example: An orphan Table must NOT be connected to any Row)* |
+| **FALSE** | **TRUE** | **SCORE (Positive)** | If the relationship exists, add `weight` to the total score. If missing, nothing happens (non-blocking). <br/>*(Example: "Referenced By Any": points if connected to Row OR Panel)* |
+| **FALSE** | **FALSE** | **SCORE (Negative)** | If the relationship **does NOT** exist, add `weight` to the total score. <br/>*(Example: Preference for loose coupling/isolation)* |
 
 ### 2. Execution Flow
 
