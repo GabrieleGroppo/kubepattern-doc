@@ -102,7 +102,7 @@ A Pattern-as-Code definition typically contains:
 ## Registry Structure
 
 :::tip Explore The Offiacial Pattern Registry
-Pattern-as-Code is constantly evolving! Check the [official registry](https://github.com/GabrieleGroppo/kubepattern-registry) for the latest patterns and contribute your own discoveries.
+Pattern-as-Code is constantly evolving! Check the [official registry](https://github.com/kubepattern/registry) for the latest patterns and contribute your own discoveries.
 :::
 
 The official KubePattern registry organizes patterns in a simple structure:
